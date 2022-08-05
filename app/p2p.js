@@ -65,8 +65,25 @@ class P2pServer {
 		}));
 	}
 
+	sendTransaction(socket, transaction) {
+		socket.send(JSON.stringify({
+			type: MESSAGE_TYPES.transaction,
+			transaction
+		}));
+	}
+
 	syncChains() {
 		this.sockets.forEach(socket => this.sendChain(socket));
+	}
+
+	broadcastTransaction(transaction) {
+		this.sockets.forEach(socket => this.sendTransaction(socket, transaction));
+	}
+
+	broadcastClearTransactions() {
+		this.sockets.forEach(socket => socket.send(JSON.stringify({
+			type: MESSAGE_TYPES.clear_transactions
+		})));
 	}
 }
 
